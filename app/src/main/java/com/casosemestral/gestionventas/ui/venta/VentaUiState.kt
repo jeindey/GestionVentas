@@ -1,5 +1,7 @@
 package com.casosemestral.gestionventas.ui.venta
 
+import com.casosemestral.gestionventas.data.local.VentaEntity
+
 data class VentaUiState(
 
     val tipoServicio: String = "",
@@ -17,6 +19,9 @@ data class VentaUiState(
     val clienteError: String? = null,
     val montoError: String? = null,
     val codigoError: String? = null,
+
+    val ventas: List<VentaEntity> = emptyList(),
+    val ventaSeleccionadaId: Int? = null,
 
     val guardando: Boolean = false,
     val guardadoExitosamente: Boolean = false
