@@ -5,12 +5,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.lifecycle.viewModelScope
-import com.casosemestral.gestionventas.data.repository.VentaRepository
 import kotlinx.coroutines.launch
 
-class VentaViewModel(
-    private val repository: VentaRepository
-) : ViewModel() {
+class VentaViewModel : ViewModel() {
     private val _uiState =
         MutableStateFlow(VentaUiState())
 
@@ -40,7 +37,8 @@ class VentaViewModel(
     ) {
         _uiState.value =
             _uiState.value.copy(
-                cliente = valor
+                cliente = valor,
+                clienteError = null
             )
     }
 
@@ -49,7 +47,8 @@ class VentaViewModel(
     ) {
         _uiState.value =
             _uiState.value.copy(
-                monto = valor
+                monto = valor,
+                montoError = null
             )
     }
 
@@ -117,18 +116,7 @@ class VentaViewModel(
     }
 
     fun cargarVentas() {
-
-        viewModelScope.launch {
-
-            repository.obtenerVentas()
-                .collect { lista ->
-
-                    _uiState.value =
-                        _uiState.value.copy(
-                            ventas = lista
-                        )
-                }
-        }
+        // Se implementará al conectar Room
     }
 
     fun guardarVenta() {
