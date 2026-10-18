@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.LaunchedEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,6 +32,15 @@ fun VentaFormScreen(
     onVolverClick: () -> Unit
 
 ) {
+    LaunchedEffect(
+        uiState.guardadoExitosamente
+    ) {
+
+        if (uiState.guardadoExitosamente) {
+            onGuardarClick()
+            viewModel.limpiarGuardadoExitoso()
+        }
+    }
 
     Scaffold(
         topBar = {

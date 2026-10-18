@@ -13,11 +13,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import com.casosemestral.gestionventas.ui.venta.VentaUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListaVentasScreen(
+
+    uiState: VentaUiState,
+
     onNuevaVentaClick: () -> Unit
+
 ) {
 
     Scaffold(
@@ -39,14 +46,47 @@ fun ListaVentasScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
-            Text(
-                text = "No existen ventas registradas"
-            )
-
             Button(
                 onClick = onNuevaVentaClick
             ) {
                 Text("Nueva Venta")
+            }
+
+            if (uiState.ventas.isEmpty()) {
+                Text(
+                    text = "No existen ventas registradas"
+                )
+
+            } else {
+                LazyColumn {
+                    items(uiState.ventas) { venta ->
+                        Text(
+                            text =
+                                "Servicio: ${venta.tipoServicio}"
+                        )
+                        Text(
+                            text =
+                                "Fecha: ${venta.fechaOperacion}"
+                        )
+                        Text(
+                            text =
+                                "Cliente: ${venta.cliente}"
+                        )
+                        Text(
+                            text =
+                                "Monto: ${venta.monto}"
+                        )
+                        Text(
+                            text =
+                                "Código: ${venta.codigoAutorizacion}"
+                        )
+                        Text(
+                            text =
+                                "Estado: ${venta.estado}"
+                        )
+                        Text("--------------")
+                    }
+                }
             }
         }
     }

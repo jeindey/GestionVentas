@@ -18,6 +18,9 @@ fun AppNavigation() {
     val navController =
         rememberNavController()
 
+    val viewModel: VentaViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsState()
+
     NavHost(
         navController = navController,
         startDestination = "lista_ventas"
@@ -26,9 +29,8 @@ fun AppNavigation() {
         composable("lista_ventas") {
 
             ListaVentasScreen(
-
+                uiState = uiState,
                 onNuevaVentaClick = {
-
                     navController.navigate(
                         "venta_form"
                     )
@@ -38,23 +40,13 @@ fun AppNavigation() {
 
         composable("venta_form") {
 
-            val viewModel: VentaViewModel = viewModel()
-
-            val uiState by viewModel.uiState.collectAsState()
-
-
             VentaFormScreen(
                 uiState = uiState,
-
                 viewModel = viewModel,
-
                 onGuardarClick = {
-
                     navController.popBackStack()
                 },
-
                 onVolverClick = {
-
                     navController.popBackStack()
                 }
             )

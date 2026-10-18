@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import com.casosemestral.gestionventas.data.local.VentaEntity
 
 class VentaViewModel : ViewModel() {
     private val _uiState =
@@ -149,12 +150,52 @@ class VentaViewModel : ViewModel() {
             return
         }
 
+        val nuevaVenta = VentaEntity(
+
+            tipoServicio = _uiState.value.tipoServicio,
+            fechaOperacion = _uiState.value.fechaOperacion,
+            cliente = _uiState.value.cliente,
+            monto = _uiState.value.monto.toDouble(),
+            codigoAutorizacion =
+                _uiState.value.codigoAutorizacion,
+            observaciones =
+                _uiState.value.observaciones,
+            respaldoUri = null,
+            estado = "Borrador"
+        )
+
+        val listaActual =
+            _uiState.value.ventas.toMutableList()
+
+        listaActual.add(nuevaVenta)
+
         _uiState.value =
             _uiState.value.copy(
-                guardando = true
-            )
+                ventas = listaActual,
 
-        // Aquí después guardaremos en Room
+                tipoServicio = "",
+                fechaOperacion = "",
+                cliente = "",
+                monto = "",
+                codigoAutorizacion = "",
+                observaciones = "",
+
+                tipoServicioError = null,
+                fechaError = null,
+                clienteError = null,
+                montoError = null,
+                codigoError = null,
+
+                guardadoExitosamente = true
+            )
+    }
+
+    fun limpiarGuardadoExitoso() {
+
+        _uiState.value =
+            _uiState.value.copy(
+                guardadoExitosamente = false
+            )
     }
 
 }
