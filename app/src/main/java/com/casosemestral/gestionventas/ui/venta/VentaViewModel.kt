@@ -19,7 +19,8 @@ class VentaViewModel : ViewModel() {
     ) {
         _uiState.value =
             _uiState.value.copy(
-                tipoServicio = valor
+                tipoServicio = valor,
+                tipoServicioError = null
             )
     }
 
@@ -28,7 +29,8 @@ class VentaViewModel : ViewModel() {
     ) {
         _uiState.value =
             _uiState.value.copy(
-                fechaOperacion = valor
+                fechaOperacion = valor,
+                fechaError = null
             )
     }
 
@@ -57,7 +59,9 @@ class VentaViewModel : ViewModel() {
     ) {
         _uiState.value =
             _uiState.value.copy(
-                codigoAutorizacion = valor
+                codigoAutorizacion = valor,
+                codigoError = null
+
             )
     }
 
@@ -81,6 +85,16 @@ class VentaViewModel : ViewModel() {
                 _uiState.value.copy(
                     tipoServicioError =
                         "Debe seleccionar un servicio"
+                )
+        }
+        if (_uiState.value.fechaOperacion.isBlank()) {
+
+            valido = false
+
+            _uiState.value =
+                _uiState.value.copy(
+                    fechaError =
+                        "Fecha obligatoria"
                 )
         }
 
@@ -109,6 +123,16 @@ class VentaViewModel : ViewModel() {
                 _uiState.value.copy(
                     montoError =
                         "Monto debe ser mayor a 0"
+                )
+        }
+        if (_uiState.value.codigoAutorizacion.isBlank()) {
+
+            valido = false
+
+            _uiState.value =
+                _uiState.value.copy(
+                    codigoError =
+                        "Código obligatorio"
                 )
         }
 

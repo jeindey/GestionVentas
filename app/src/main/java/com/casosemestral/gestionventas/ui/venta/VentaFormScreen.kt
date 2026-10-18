@@ -59,9 +59,18 @@ fun VentaFormScreen(
                 onValueChange = {
                     viewModel.actualizarTipoServicio(it)
                 },
-                Modifier.fillMaxWidth(),
+
+                modifier = Modifier.fillMaxWidth(),
+
+                isError = uiState.tipoServicioError != null,
+
                 label = {
                     Text("Tipo de Servicio")
+                },
+                supportingText = {
+                    Text(
+                        uiState.tipoServicioError ?: ""
+                    )
                 }
             )
 
@@ -70,10 +79,20 @@ fun VentaFormScreen(
                 onValueChange = {
                     viewModel.actualizarFecha(it)
                 },
-                Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
+
+                isError = uiState.fechaError != null,
+
                 label = {
                     Text("Fecha Operación")
+                },
+
+                supportingText = {
+                    Text(
+                        uiState.fechaError ?: ""
+                    )
                 }
+
             )
 
             OutlinedTextField(
@@ -121,10 +140,20 @@ fun VentaFormScreen(
                 onValueChange = {
                     viewModel.actualizarCodigo(it)
                 },
-                Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
+
+                isError = uiState.codigoError != null,
+
                 label = {
                     Text("Código Autorización")
+                },
+
+                supportingText = {
+                    Text(
+                        uiState.codigoError ?: ""
+                    )
                 }
+
             )
 
             OutlinedTextField(
@@ -132,7 +161,7 @@ fun VentaFormScreen(
                 onValueChange = {
                     viewModel.actualizarObservaciones(it)
                 },
-                Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 label = {
                     Text("Observaciones")
                 }
