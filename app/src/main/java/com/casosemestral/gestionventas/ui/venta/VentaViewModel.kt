@@ -7,13 +7,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import com.casosemestral.gestionventas.data.local.VentaEntity
+import com.casosemestral.gestionventas.data.repository.VentaRepository
 
-class VentaViewModel : ViewModel() {
+class VentaViewModel(
+    private val repository: VentaRepository
+) : ViewModel() {
     private val _uiState =
         MutableStateFlow(VentaUiState())
 
     val uiState: StateFlow<VentaUiState> =
         _uiState.asStateFlow()
+
+    init {
+        cargarVentas()
+    }
 
     fun actualizarTipoServicio(
         valor: String
@@ -141,7 +148,18 @@ class VentaViewModel : ViewModel() {
     }
 
     fun cargarVentas() {
-        // Se implementará al conectar Room
+
+        viewModelScope.launch {
+
+            repository.obtenerVentas()
+                .collect { lista ->
+
+                    _uiState.value =
+                        _uiState.value.copy(
+                            ventas = lista
+                        )
+                }
+        }
     }
 
     fun guardarVenta() {
@@ -164,30 +182,30 @@ class VentaViewModel : ViewModel() {
             estado = "Borrador"
         )
 
-        val listaActual =
-            _uiState.value.ventas.toMutableList()
+        viewModelScope.launch {
 
-        listaActual.add(nuevaVenta)
-
-        _uiState.value =
-            _uiState.value.copy(
-                ventas = listaActual,
-
-                tipoServicio = "",
-                fechaOperacion = "",
-                cliente = "",
-                monto = "",
-                codigoAutorizacion = "",
-                observaciones = "",
-
-                tipoServicioError = null,
-                fechaError = null,
-                clienteError = null,
-                montoError = null,
-                codigoError = null,
-
-                guardadoExitosamente = true
+            repository.insertarVenta(
+                nuevaVenta
             )
+
+            _uiState.value =
+                _uiState.value.copy(
+                    tipoServicio = "",
+                    fechaOperacion = "",
+                    cliente = "",
+                    monto = "",
+                    codigoAutorizacion = "",
+                    observaciones = "",
+
+                    tipoServicioError = null,
+                    fechaError = null,
+                    clienteError = null,
+                    montoError = null,
+                    codigoError = null,
+
+                    guardadoExitosamente = true
+                )
+        }
     }
 
     fun limpiarGuardadoExitoso() {

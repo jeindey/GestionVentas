@@ -62,6 +62,10 @@ fun ListaVentasScreen(
                     items(uiState.ventas) { venta ->
                         Text(
                             text =
+                                "Id: ${venta.id}"
+                        )
+                        Text(
+                            text =
                                 "Servicio: ${venta.tipoServicio}"
                         )
                         Text(
@@ -79,6 +83,10 @@ fun ListaVentasScreen(
                         Text(
                             text =
                                 "Código: ${venta.codigoAutorizacion}"
+                        )
+                        Text(
+                            text =
+                                "Observaciones: ${venta.observaciones}"
                         )
                         Text(
                             text =

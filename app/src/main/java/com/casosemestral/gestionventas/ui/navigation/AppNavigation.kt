@@ -10,6 +10,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.casosemestral.gestionventas.ui.venta.VentaViewModel
+import androidx.compose.ui.platform.LocalContext
+import com.casosemestral.gestionventas.data.local.AppDatabase
+import com.casosemestral.gestionventas.data.repository.VentaRepository
+import com.casosemestral.gestionventas.ui.venta.VentaViewModelFactory
 
 
 @Composable
@@ -18,7 +22,28 @@ fun AppNavigation() {
     val navController =
         rememberNavController()
 
-    val viewModel: VentaViewModel = viewModel()
+    val context = LocalContext.current
+
+    val database =
+        AppDatabase.getDatabase(
+            context
+        )
+
+    val repository =
+        VentaRepository(
+            database.ventaDao()
+        )
+
+    val factory =
+        VentaViewModelFactory(
+            repository
+        )
+
+    val viewModel: VentaViewModel =
+        viewModel(
+            factory = factory
+        )
+
     val uiState by viewModel.uiState.collectAsState()
 
     NavHost(
