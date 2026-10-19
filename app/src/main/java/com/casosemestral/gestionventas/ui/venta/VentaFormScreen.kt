@@ -57,9 +57,13 @@ fun VentaFormScreen(
     val context = LocalContext.current
 
     val photoFile = remember {
+
+        val fileName =
+            "venta_${System.currentTimeMillis()}.jpg"
+
         File(
             context.cacheDir,
-            "venta_evidencia.jpg"
+            fileName
         )
     }
 

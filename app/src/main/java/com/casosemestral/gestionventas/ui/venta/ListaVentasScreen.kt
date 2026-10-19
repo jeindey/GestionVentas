@@ -61,6 +61,10 @@ fun ListaVentasScreen(
                 LazyColumn {
                     items(uiState.ventas) { venta ->
                         Text(
+                            text = "Total ventas: ${uiState.ventas.size}"
+                        )
+
+                        Text(
                             text =
                                 "Id: ${venta.id}"
                         )
