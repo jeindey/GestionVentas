@@ -178,7 +178,8 @@ class VentaViewModel(
                 _uiState.value.codigoAutorizacion,
             observaciones =
                 _uiState.value.observaciones,
-            respaldoUri = null,
+            respaldoUri =
+                _uiState.value.respaldoUri,
             estado = "Borrador"
         )
 
@@ -202,6 +203,7 @@ class VentaViewModel(
                     clienteError = null,
                     montoError = null,
                     codigoError = null,
+                    respaldoUri = null,
 
                     guardadoExitosamente = true
                 )
@@ -213,6 +215,15 @@ class VentaViewModel(
         _uiState.value =
             _uiState.value.copy(
                 guardadoExitosamente = false
+            )
+    }
+
+    fun actualizarRespaldoUri(
+        uri: String
+    ) {
+        _uiState.value =
+            _uiState.value.copy(
+                respaldoUri = uri
             )
     }
 

@@ -18,6 +18,18 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.LaunchedEffect
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import java.io.File
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.FileProvider
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +53,48 @@ fun VentaFormScreen(
             viewModel.limpiarGuardadoExitoso()
         }
     }
+
+    val context = LocalContext.current
+
+    val photoFile = remember {
+        File(
+            context.cacheDir,
+            "venta_evidencia.jpg"
+        )
+    }
+
+    val photoUri = remember {
+        FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.provider",
+            photoFile
+        )
+    }
+
+    val cameraLauncher =
+        rememberLauncherForActivityResult(
+            contract =
+                ActivityResultContracts.TakePicture()
+        ) { success ->
+
+            if (success) {
+
+                viewModel.actualizarRespaldoUri(
+                    photoUri.toString()
+                )
+            }
+        }
+
+    val permissionLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { granted ->
+
+            if (granted) {
+
+                cameraLauncher.launch(photoUri)
+            }
+        }
 
     Scaffold(
         topBar = {
@@ -176,6 +230,30 @@ fun VentaFormScreen(
                     Text("Observaciones")
                 }
             )
+
+            Button(
+                onClick = {
+
+                    when {
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.CAMERA
+                        ) == PackageManager.PERMISSION_GRANTED -> {
+
+                            cameraLauncher.launch(
+                                photoUri
+                            )
+                        }
+                        else -> {
+                            permissionLauncher.launch(
+                                Manifest.permission.CAMERA
+                            )
+                        }
+                    }
+                }
+            ) {
+                Text("📷 Capturar Evidencia")
+            }
 
             Button(
                 onClick = {

@@ -89,6 +89,9 @@ fun ListaVentasScreen(
                                 "Observaciones: ${venta.observaciones}"
                         )
                         Text(
+                            text = "Evidencia: ${venta.respaldoUri}"
+                        )
+                        Text(
                             text =
                                 "Estado: ${venta.estado}"
                         )
