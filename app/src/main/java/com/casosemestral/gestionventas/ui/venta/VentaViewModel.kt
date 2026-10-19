@@ -168,6 +168,11 @@ class VentaViewModel(
             return
         }
 
+        val codigoNormalizado =
+            _uiState.value.codigoAutorizacion
+                .trim()
+                .uppercase()
+
         val nuevaVenta = VentaEntity(
 
             tipoServicio = _uiState.value.tipoServicio,
@@ -175,7 +180,7 @@ class VentaViewModel(
             cliente = _uiState.value.cliente,
             monto = _uiState.value.monto.toDouble(),
             codigoAutorizacion =
-                _uiState.value.codigoAutorizacion,
+                codigoNormalizado,
             observaciones =
                 _uiState.value.observaciones,
             respaldoUri =
@@ -184,6 +189,22 @@ class VentaViewModel(
         )
 
         viewModelScope.launch {
+
+            val codigoExiste =
+                repository.existeCodigo(
+                    codigoNormalizado
+                )
+
+            if (codigoExiste) {
+
+                _uiState.value =
+                    _uiState.value.copy(
+                        codigoError =
+                            "Código ya registrado"
+                    )
+
+                return@launch
+            }
 
             repository.insertarVenta(
                 nuevaVenta

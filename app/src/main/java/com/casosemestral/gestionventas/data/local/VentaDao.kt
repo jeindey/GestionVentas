@@ -41,7 +41,7 @@ interface VentaDao {
         """
         SELECT COUNT(*)
         FROM ventas
-        WHERE codigoAutorizacion = :codigo
+        WHERE UPPER(codigoAutorizacion) = UPPER(:codigo)
         """
     )
     suspend fun existeCodigo(
