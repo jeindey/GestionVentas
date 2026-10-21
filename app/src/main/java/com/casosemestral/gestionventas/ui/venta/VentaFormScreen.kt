@@ -62,7 +62,7 @@ fun VentaFormScreen(
             "venta_${System.currentTimeMillis()}.jpg"
 
         File(
-            context.cacheDir,
+            context.filesDir,
             fileName
         )
     }
