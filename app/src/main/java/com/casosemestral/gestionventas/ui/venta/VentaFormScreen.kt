@@ -271,6 +271,14 @@ fun VentaFormScreen(
             }
 
             Button(
+                onClick = {
+                    viewModel.enviarRevision()
+                }
+            ) {
+                Text("Enviar a revisión")
+            }
+
+            Button(
                 onClick = onVolverClick
             ) {
                 Text("Volver")

@@ -185,7 +185,8 @@ class VentaViewModel(
                 _uiState.value.observaciones,
             respaldoUri =
                 _uiState.value.respaldoUri,
-            estado = "Borrador"
+            estado =
+                _uiState.value.estado
         )
 
         viewModelScope.launch {
@@ -246,12 +247,23 @@ class VentaViewModel(
                     codigoError = null,
                     respaldoUri = null,
                     ventaSeleccionadaId = null,
+                    estado = "Borrador",
 
                     guardadoExitosamente = true
                 )
         }
     }
 
+    fun enviarRevision() {
+
+        _uiState.value =
+            _uiState.value.copy(
+                estado =
+                    "Pendiente de revisión"
+            )
+
+        guardarVenta()
+    }
     fun limpiarGuardadoExitoso() {
 
         _uiState.value =
