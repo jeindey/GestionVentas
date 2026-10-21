@@ -23,7 +23,9 @@ fun ListaVentasScreen(
 
     uiState: VentaUiState,
 
-    onNuevaVentaClick: () -> Unit
+    onNuevaVentaClick: () -> Unit,
+
+    onEditarVentaClick: (Int) -> Unit
 
 ) {
 
@@ -99,6 +101,16 @@ fun ListaVentasScreen(
                             text =
                                 "Estado: ${venta.estado}"
                         )
+                        Button(
+                            onClick = {
+
+                                onEditarVentaClick(
+                                    venta.id
+                                )
+                            }
+                        ) {
+                            Text("Editar")
+                        }
                         Text("--------------")
                     }
                 }

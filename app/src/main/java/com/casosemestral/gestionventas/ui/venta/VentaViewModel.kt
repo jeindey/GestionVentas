@@ -190,12 +190,16 @@ class VentaViewModel(
 
         viewModelScope.launch {
 
-            val codigoExiste =
-                repository.existeCodigo(
+            val ventaConMismoCodigo =
+                repository.obtenerVentaPorCodigo(
                     codigoNormalizado
                 )
 
-            if (codigoExiste) {
+            if (
+                ventaConMismoCodigo != null &&
+                ventaConMismoCodigo.id !=
+                _uiState.value.ventaSeleccionadaId
+            ) {
 
                 _uiState.value =
                     _uiState.value.copy(
@@ -206,9 +210,25 @@ class VentaViewModel(
                 return@launch
             }
 
-            repository.insertarVenta(
-                nuevaVenta
-            )
+            if (
+                _uiState.value.ventaSeleccionadaId != null
+            ) {
+
+                repository.actualizarVenta(
+
+                    nuevaVenta.copy(
+
+                        id =
+                            _uiState.value.ventaSeleccionadaId!!
+                    )
+                )
+
+            } else {
+
+                repository.insertarVenta(
+                    nuevaVenta
+                )
+            }
 
             _uiState.value =
                 _uiState.value.copy(
@@ -225,6 +245,7 @@ class VentaViewModel(
                     montoError = null,
                     codigoError = null,
                     respaldoUri = null,
+                    ventaSeleccionadaId = null,
 
                     guardadoExitosamente = true
                 )
@@ -246,6 +267,63 @@ class VentaViewModel(
             _uiState.value.copy(
                 respaldoUri = uri
             )
+    }
+
+    fun seleccionarVenta(
+        id: Int
+    ) {
+
+        _uiState.value =
+            _uiState.value.copy(
+                ventaSeleccionadaId = id
+            )
+    }
+
+    fun cargarVentaParaEditar(
+        id: Int
+    ) {
+
+        viewModelScope.launch {
+
+            val venta =
+                repository.obtenerVentaPorId(
+                    id
+                )
+
+            venta?.let {
+
+                _uiState.value =
+                    _uiState.value.copy(
+
+                        ventaSeleccionadaId =
+                            it.id,
+
+                        tipoServicio =
+                            it.tipoServicio,
+
+                        fechaOperacion =
+                            it.fechaOperacion,
+
+                        cliente =
+                            it.cliente,
+
+                        monto =
+                            it.monto.toString(),
+
+                        codigoAutorizacion =
+                            it.codigoAutorizacion,
+
+                        observaciones =
+                            it.observaciones,
+
+                        respaldoUri =
+                            it.respaldoUri,
+
+                        estado =
+                            it.estado
+                    )
+            }
+        }
     }
 
 }

@@ -47,4 +47,19 @@ interface VentaDao {
     suspend fun existeCodigo(
         codigo: String
     ): Int
+
+    @Query(
+        """
+    SELECT *
+    FROM ventas
+    WHERE UPPER(codigoAutorizacion) =
+          UPPER(:codigo)
+    LIMIT 1
+    """
+    )
+    suspend fun obtenerVentaPorCodigo(
+        codigo: String
+    ): VentaEntity?
+
+
 }

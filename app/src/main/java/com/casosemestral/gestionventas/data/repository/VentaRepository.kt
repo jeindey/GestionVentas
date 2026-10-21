@@ -27,4 +27,23 @@ class VentaRepository(
     ): Boolean {
         return dao.existeCodigo(codigo) > 0
     }
+
+    suspend fun obtenerVentaPorId(
+        id: Int
+    ): VentaEntity? {
+
+        return dao.obtenerVentaPorId(
+            id
+        )
+    }
+
+    suspend fun obtenerVentaPorCodigo(
+        codigo: String
+    ): VentaEntity? {
+
+        return dao.obtenerVentaPorCodigo(
+            codigo
+        )
+    }
+
 }

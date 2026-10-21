@@ -55,7 +55,19 @@ fun AppNavigation() {
 
             ListaVentasScreen(
                 uiState = uiState,
+
                 onNuevaVentaClick = {
+                    navController.navigate(
+                        "venta_form"
+                    )
+                },
+
+                onEditarVentaClick = { id ->
+
+                    viewModel.cargarVentaParaEditar(
+                        id
+                    )
+
                     navController.navigate(
                         "venta_form"
                     )
