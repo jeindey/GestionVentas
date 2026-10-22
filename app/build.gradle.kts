@@ -38,6 +38,9 @@ android {
     }
 }
 
+//camara
+val camerax_version = "1.4.2"
+
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
@@ -59,7 +62,13 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     ksp(libs.androidx.room.compiler)
-
+    // Camara: CameraX + ML Kit (lectura de QR) segun guia "Uso camara para leer codigo QR"
+    implementation("androidx.camera:camera-core:$camerax_version")
+    implementation("androidx.camera:camera-camera2:$camerax_version")
+    implementation("androidx.camera:camera-lifecycle:$camerax_version")
+    implementation("androidx.camera:camera-view:$camerax_version")
+    implementation("com.google.mlkit:barcode-scanning:17.3.0")
+    implementation(libs.androidx.lifecycle.runtime.compose)
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
