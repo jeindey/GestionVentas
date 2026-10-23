@@ -30,4 +30,10 @@ data class VentaUiState(
 
     val guardando: Boolean = false,
     val guardadoExitosamente: Boolean = false
-)
+){
+    // La lógica de filtrado vive en el estado, no en la pantalla
+    val ventasFiltradas: List<VentaEntity>
+        get() = ventas.filter {
+            it.codigoAutorizacion.contains(busqueda.trim(), ignoreCase = true)
+        }
+}
