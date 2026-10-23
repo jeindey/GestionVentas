@@ -22,6 +22,12 @@ class VentaRepository(
         dao.actualizarVenta(venta)
     }
 
+    suspend fun eliminarVenta(
+        venta: VentaEntity
+    ) {
+        dao.eliminarVenta(venta)
+    }
+
     suspend fun existeCodigo(
         codigo: String
     ): Boolean {

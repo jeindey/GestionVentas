@@ -74,6 +74,9 @@ fun AppNavigation(
                     ventaViewModel.cargarVentaParaEditar(id)
                     navController.navigate(Screen.VentaForm.route)
                 },
+                onEliminarClick = { ventaViewModel.solicitarEliminar(it) },
+                onConfirmarEliminar = { ventaViewModel.confirmarEliminar() },
+                onCancelarEliminar = { ventaViewModel.cancelarEliminar() },
                 onVolverClick = { navController.popBackStack() }
             )
         }

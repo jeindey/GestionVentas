@@ -29,6 +29,7 @@ data class VentaUiState(
     val ventaSeleccionadaId: Int? = null,
 
     val guardando: Boolean = false,
+    val ventaAEliminar: VentaEntity? = null,
     val guardadoExitosamente: Boolean = false
 ){
     // La lógica de filtrado vive en el estado, no en la pantalla

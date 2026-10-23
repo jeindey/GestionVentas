@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import androidx.room.Delete
 
 @Dao
 interface VentaDao {
@@ -16,6 +17,11 @@ interface VentaDao {
 
     @Update
     suspend fun actualizarVenta(
+        venta: VentaEntity
+    )
+
+    @Delete
+    suspend fun eliminarVenta(
         venta: VentaEntity
     )
 
