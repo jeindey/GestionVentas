@@ -245,6 +245,29 @@ class VentaViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    // ---------- ELIMINAR ----------
+
+    fun solicitarEliminar(venta: VentaEntity) {
+        _uiState.update { it.copy(ventaAEliminar = venta) }
+    }
+
+    fun cancelarEliminar() {
+        _uiState.update { it.copy(ventaAEliminar = null) }
+    }
+
+    fun confirmarEliminar() {
+        val venta = _uiState.value.ventaAEliminar ?: return
+
+        viewModelScope.launch {
+            // Se vuelve a consultar la venta: solo se elimina si sigue siendo editable
+            val actual = repository.obtenerVentaPorId(venta.id)
+            if (actual != null && actual.esEditable()) {
+                repository.eliminarVenta(actual)
+            }
+            _uiState.update { it.copy(ventaAEliminar = null) }
+        }
+    }
+
     fun limpiarGuardadoExitoso() {
         _uiState.update { it.copy(guardadoExitosamente = false) }
     }

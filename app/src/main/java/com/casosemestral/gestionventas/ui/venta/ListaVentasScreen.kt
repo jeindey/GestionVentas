@@ -2,15 +2,19 @@ package com.casosemestral.gestionventas.ui.venta
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,9 +32,32 @@ fun ListaVentasScreen(
     onBuscarChange: (String) -> Unit,
     onNuevaVentaClick: () -> Unit,
     onEditarVentaClick: (Int) -> Unit,
+    onEliminarClick: (VentaEntity) -> Unit,
+    onConfirmarEliminar: () -> Unit,
+    onCancelarEliminar: () -> Unit,
     onVolverClick: () -> Unit
 ) {
-    // Búsqueda por código de autorización
+    // Diálogo de confirmación: se muestra solo si hay una venta pendiente de eliminar
+    uiState.ventaAEliminar?.let { venta ->
+        AlertDialog(
+            onDismissRequest = onCancelarEliminar,
+            title = { Text("Eliminar venta") },
+            text = {
+                Text("¿Eliminar la venta ${venta.codigoAutorizacion}? Esta acción no se puede deshacer.")
+            },
+            confirmButton = {
+                TextButton(onClick = onConfirmarEliminar) {
+                    Text("Eliminar", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onCancelarEliminar) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
     // El filtro ya viene calculado desde el UiState
     val ventasMostradas = uiState.ventasFiltradas
 
@@ -82,7 +109,8 @@ fun ListaVentasScreen(
                     items(ventasMostradas, key = { it.id }) { venta ->
                         VentaCard(
                             venta = venta,
-                            onEditarClick = { onEditarVentaClick(venta.id) }
+                            onEditarClick = { onEditarVentaClick(venta.id) },
+                            onEliminarClick = { onEliminarClick(venta) }
                         )
                     }
                 }
@@ -94,7 +122,8 @@ fun ListaVentasScreen(
 @Composable
 private fun VentaCard(
     venta: VentaEntity,
-    onEditarClick: () -> Unit
+    onEditarClick: () -> Unit,
+    onEliminarClick: () -> Unit
 ) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -115,14 +144,24 @@ private fun VentaCard(
                 Text("Respaldo: ${venta.respaldoUri}")
             }
 
-            // Solo se puede consultar/modificar mientras no esté validada
+            // Solo se puede consultar/modificar/eliminar mientras no esté validada
             if (venta.esEditable()) {
-                Button(onClick = onEditarClick) {
-                    Text("Editar")
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = onEditarClick) {
+                        Text("Editar")
+                    }
+                    OutlinedButton(
+                        onClick = onEliminarClick,
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Text("Eliminar")
+                    }
                 }
             } else {
                 Text(
-                    text = "Venta validada: no se puede modificar",
+                    text = "Venta validada: no se puede modificar ni eliminar",
                     color = MaterialTheme.colorScheme.error
                 )
             }
