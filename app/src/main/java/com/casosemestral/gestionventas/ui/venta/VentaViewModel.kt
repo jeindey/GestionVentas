@@ -11,6 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.time.format.ResolverStyle
 
 // ViewModel -> Repository -> DAO -> Room (la pantalla nunca toca la base de datos)
 class VentaViewModel(app: Application) : AndroidViewModel(app) {
@@ -21,6 +25,19 @@ class VentaViewModel(app: Application) : AndroidViewModel(app) {
 
     private val _uiState = MutableStateFlow(VentaUiState())
     val uiState: StateFlow<VentaUiState> = _uiState.asStateFlow()
+    // Formato de fecha estricto: dd/MM/aaaa (rechaza 31/02/2025, etc.)
+    private val formatoFecha = DateTimeFormatter
+        .ofPattern("dd/MM/uuuu")
+        .withResolverStyle(ResolverStyle.STRICT)
+
+    private fun fechaValida(texto: String): Boolean {
+        return try {
+            LocalDate.parse(texto, formatoFecha)
+            true
+        } catch (e: DateTimeParseException) {
+            false
+        }
+    }
 
     init {
         cargarVentas()
@@ -72,20 +89,28 @@ class VentaViewModel(app: Application) : AndroidViewModel(app) {
 
     fun validarFormulario(): Boolean {
         val actual = _uiState.value
-        val monto = actual.monto.trim().toDoubleOrNull()
+        // Acepta coma o punto decimal ("1500,5" o "1500.5")
+        val monto = actual.monto.trim().replace(',', '.').toDoubleOrNull()
 
         val tipoError =
             if (actual.tipoServicio.isBlank()) "Debe indicar el tipo de convenio o servicio" else null
-        val fechaError =
-            if (actual.fechaOperacion.isBlank()) "Fecha obligatoria" else null
+
+        val fechaError = when {
+            actual.fechaOperacion.isBlank() -> "Fecha obligatoria"
+            !fechaValida(actual.fechaOperacion.trim()) -> "Formato inválido (use dd/MM/aaaa)"
+            else -> null
+        }
+
         val clienteError =
             if (actual.cliente.isBlank()) "Cliente obligatorio" else null
+
         val montoError = when {
             actual.monto.isBlank() -> "Monto obligatorio"
-            monto == null -> "El monto debe ser numérico"
+            monto == null || monto.isNaN() || monto.isInfinite() -> "El monto debe ser numérico"
             monto <= 0 -> "El monto debe ser mayor que 0"
             else -> null
         }
+
         val codigoError =
             if (actual.codigoAutorizacion.isBlank()) "Código obligatorio" else null
 
@@ -174,7 +199,7 @@ class VentaViewModel(app: Application) : AndroidViewModel(app) {
             tipoServicio = actual.tipoServicio.trim(),
             fechaOperacion = actual.fechaOperacion.trim(),
             cliente = actual.cliente.trim(),
-            monto = actual.monto.trim().toDouble(),
+            monto = actual.monto.trim().replace(',', '.').toDouble(),
             codigoAutorizacion = codigoNormalizado,
             observaciones = actual.observaciones.trim(),
             respaldoUri = actual.respaldoUri,

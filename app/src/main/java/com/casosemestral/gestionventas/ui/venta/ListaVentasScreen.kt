@@ -31,9 +31,8 @@ fun ListaVentasScreen(
     onVolverClick: () -> Unit
 ) {
     // Búsqueda por código de autorización
-    val ventasMostradas = uiState.ventas.filter {
-        it.codigoAutorizacion.contains(uiState.busqueda.trim(), ignoreCase = true)
-    }
+    // El filtro ya viene calculado desde el UiState
+    val ventasMostradas = uiState.ventasFiltradas
 
     Scaffold(
         topBar = {

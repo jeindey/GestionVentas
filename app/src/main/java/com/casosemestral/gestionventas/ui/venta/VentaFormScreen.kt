@@ -78,7 +78,7 @@ fun VentaFormScreen(
                 onValueChange = viewModel::actualizarFecha,
                 modifier = Modifier.fillMaxWidth(),
                 isError = uiState.fechaError != null,
-                label = { Text("Fecha de operación") },
+                label = { Text("Fecha de operación (dd/MM/aaaa)") },
                 supportingText = { Text(uiState.fechaError ?: "") }
             )
 
